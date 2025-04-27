@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Казино</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div id="balance">Баланс: 5000</div>
+    <button id="recharge-button">Пополнить баланс</button>
+
+    <div id="recharge-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-recharge">&times;</span>
+            <h3>Пополнение баланса</h3>
+            <label for="card-number">Номер карты:</label>
+            <input type="text" id="card-number" maxlength="16" placeholder="Введите 16 цифр">
+            <label for="expiry-date">ММ/ГГ:</label>
+            <input type="text" id="expiry-date" maxlength="5" placeholder="ММ/ГГ">
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" maxlength="3" placeholder="Введите 3 цифры">
+            <label for="recharge-amount">Сумма пополнения:</label>
+            <input type="number" id="recharge-amount" min="1" max="5000" placeholder="Введите сумму">
+            <button id="confirm-recharge">Пополнить</button>
+        </div>
+    </div>
+
+    <div class="casino-games">
+        <div class="slot-machine">
+            <div class="slot-window" id="slot1">0</div>
+            <div class="slot-window" id="slot2">0</div>
+            <div class="slot-window" id="slot3">0</div>
+            <button id="spin-button">Крутить</button>
+            <div id="result-message"></div>
+        </div>
+        <div class="blackjack">
+            <h3>Блэкджек</h3>
+            <div id="player-score">Ваши очки: 0</div>
+            <div id="bot-score">Очки бота: 0</div>
+            <button id="hit-button">Взять</button>
+            <button id="stand-button">Оставить</button>
+            <button id="new-game-button">Начать новую игру</button>
+            <div id="blackjack-result"></div>
+        </div>
+        <div class="numbers-game">
+            <h3>Числа</h3>
+            <div id="shown-number">Показанное число: 50</div>
+            <button id="higher-button">Больше</button>
+            <button id="lower-button">Меньше</button>
+            <div id="numbers-result"></div>
+        </div>
+        <div class="racket-game">
+            <h3>Ракетка</h3>
+            <div id="timer-display">00:00</div>
+            <button id="start-button">Старт</button>
+            <button id="stop-button">Стоп</button>
+            <div id="racket-result"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize balance
+        let balance = 5000;
+        const balanceDisplay = document.getElementById('balance');
+
+        // Update balance display
+        function updateBalanceDisplay() {
+            balanceDisplay.textContent = `Баланс: ${balance}`;
+        }
+
+        // Recharge Modal Logic
+        const rechargeButton = document.getElementById('recharge-button');
+        const rechargeModal = document.getElementById('recharge-modal');
+        const closeRecharge = document.querySelector('.close-recharge');
+        const confirmRecharge = document.getElementById('confirm-recharge');
+
+        rechargeButton.onclick = function() {
+            rechargeModal.style.display = 'block';
+        }
+
+        closeRecharge.onclick = function() {
+            rechargeModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == rechargeModal) {
+                rechargeModal.style.display = 'none';
+            }
+        }
+
+        confirmRecharge.onclick = function() {
+            const cardNumber = document.getElementById('card-number').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+            const cvv = document.getElementById('cvv').value;
+            const amount = parseInt(document.getElementById('recharge-amount').value);
+
+            if (cardNumber.length === 16 && expiryDate.match(/\d{2}\/\d{2}/) && cvv.length === 3 && !isNaN(amount) && amount >= 1 && amount <= 5000) {
+                balance += amount;
+                updateBalanceDisplay();
+                alert(`Баланс пополнен на ${amount}`);
+                rechargeModal.style.display = 'none';
+            } else {
+                alert('Пожалуйста, введите корректные данные.');
+            }
+        }
+
+        // Slot Machine Logic
+        const spinButton = document.getElementById('spin-button');
+        const resultMessage = document.getElementById('result-message');
+
+        spinButton.onclick = function() {
+            if (balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                let slot1 = document.getElementById('slot1');
+                let slot2 = document.getElementById('slot2');
+                let slot3 = document.getElementById('slot3');
+                let spinTime = 3000; // 3 seconds
+                let interval = 100; // Interval for number change
+
+                let spinInterval = setInterval(() => {
+                    slot1.textContent = Math.floor(Math.random() * 10);
+                    slot2.textContent = Math.floor(Math.random() * 10);
+                    slot3.textContent = Math.floor(Math.random() * 10);
+                }, interval);
+
+                setTimeout(() => {
+                    clearInterval(spinInterval);
+                    // Check for 777
+                    if (slot1.textContent === '7' && slot2.textContent === '7' && slot3.textContent === '7') {
+                        resultMessage.textContent = 'Джекпот! Вы выиграли 1,000,000!';
+                        balance += 1000000;
+                    } else if (Math.random() < 0.3) { // 30% chance to win
+                        let winningNumber = Math.floor(Math.random() * 10);
+                        slot1.textContent = winningNumber;
+                        slot2.textContent = winningNumber;
+                        slot3.textContent = winningNumber;
+                        resultMessage.textContent = 'Ура! Вы победили! Ваш выигрыш: ничего!';
+                        balance += 200; // Double the bet
+                    } else {
+                        resultMessage.textContent = 'Попробуйте снова!';
+                    }
+                    updateBalanceDisplay();
+                }, spinTime);
+            } else {
+                resultMessage.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        // Blackjack Game Logic
+        let playerScore = 0;
+        let botScore = 0;
+        const playerScoreDisplay = document.getElementById('player-score');
+        const botScoreDisplay = document.getElementById('bot-score');
+        const blackjackResult = document.getElementById('blackjack-result');
+        const hitButton = document.getElementById('hit-button');
+        const standButton = document.getElementById('stand-button');
+        const newGameButton = document.getElementById('new-game-button');
+
+        hitButton.onclick = function() {
+            playerScore += Math.floor(Math.random() * 11) + 1;
+            playerScoreDisplay.textContent = `Ваши очки: ${playerScore}`;
+            checkBlackjackWinner();
+        }
+
+        standButton.onclick = function() {
+            botPlay();
+            checkBlackjackWinner();
+        }
+
+        newGameButton.onclick = function() {
+            resetBlackjack();
+        }
+
+        function botPlay() {
+            while (botScore < 17) { // Bot will hit until it reaches 17
+                botScore += Math.floor(Math.random() * 11) + 1;
+                if (botScore >= 21) break; // Stop if bot reaches 21
+            }
+            botScoreDisplay.textContent = `Очки бота: ${botScore}`;
+            checkBlackjackWinner(); // Check winner after bot plays
+        }
+
+        function checkBlackjackWinner() {
+            if (playerScore === 21 && botScore !== 21) {
+                blackjackResult.textContent = 'Вы победили!';
+                balance += 200; // Double the bet
+            } else if (botScore === 21 && playerScore !== 21) {
+                blackjackResult.textContent = 'Вы проиграли!';
+            } else if (playerScore > 21) {
+                blackjackResult.textContent = 'Вы проиграли!';
+            } else if (botScore > 21) {
+                blackjackResult.textContent = 'Вы победили!';
+                balance += 200; // Double the bet
+            }
+            updateBalanceDisplay();
+        }
+
+        function resetBlackjack() {
+            playerScore = 0;
+            botScore = 0;
+            playerScoreDisplay.textContent = 'Ваши очки: 0';
+            botScoreDisplay.textContent = 'Очки бота: 0';
+            blackjackResult.textContent = '';
+        }
+
+        // Numbers Game Logic
+        const shownNumberDisplay = document.getElementById('shown-number');
+        const numbersResult = document.getElementById('numbers-result');
+        const higherButton = document.getElementById('higher-button');
+        const lowerButton = document.getElementById('lower-button');
+
+        let hiddenNumber = Math.floor(Math.random() * 100) + 1;
+        let shownNumber = 50; // Initial shown number
+        shownNumberDisplay.textContent = `Показанное число: ${shownNumber}`;
+
+        higherButton.onclick = function() {
+            if (balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                if (hiddenNumber > shownNumber) {
+                    numbersResult.textContent = 'Вы угадали!';
+                    balance += 200; // Double the bet
+                } else {
+                    numbersResult.textContent = 'Вы не угадали!';
+                }
+                updateBalanceDisplay();
+                resetNumbersGame();
+            } else {
+                numbersResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        lowerButton.onclick = function() {
+            if (balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                if (hiddenNumber < shownNumber) {
+                    numbersResult.textContent = 'Вы угадали!';
+                    balance += 200; // Double the bet
+                } else {
+                    numbersResult.textContent = 'Вы не угадали!';
+                }
+                updateBalanceDisplay();
+                resetNumbersGame();
+            } else {
+                numbersResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        function resetNumbersGame() {
+            hiddenNumber = Math.floor(Math.random() * 100) + 1;
+            shownNumber = Math.floor(Math.random() * 100) + 1;
+            shownNumberDisplay.textContent = `Показанное число: ${shownNumber}`;
+        }
+
+        // Racket Game Logic
+        const timerDisplay = document.getElementById('timer-display');
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+        const racketResult = document.getElementById('racket-result');
+
+        let timerInterval;
+        let randomStopTime;
+        let timerRunning = false;
+
+        startButton.onclick = function() {
+            if (!timerRunning && balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                timerRunning = true;
+                racketResult.textContent = '';
+                let startTime = Date.now();
+                randomStopTime = Math.floor(Math.random() * 5000) + 2000; // Random stop between 2 and 7 seconds
+
+                timerInterval = setInterval(() => {
+                    let elapsedTime = Date.now() - startTime;
+                    let seconds = Math.floor(elapsedTime / 1000);
+                    let milliseconds = elapsedTime % 1000;
+                    timerDisplay.textContent = `${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
+
+                    if (elapsedTime >= randomStopTime) {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        racketResult.textContent = 'Вы проиграли!';
+                        updateBalanceDisplay();
+                    }
+                }, 10);
+            } else if (balance < 100) {
+                racketResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        stopButton.onclick = function() {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                let elapsedTime = Date.now() - startTime;
+                let seconds = Math.floor(elapsedTime / 1000);
+                if (elapsedTime < randomStopTime) {
+                    racketResult.textContent = 'Вы победили!';
+                    balance += 200 + (seconds * 100); // Double the bet plus 100 per second
+                } else {
+                    racketResult.textContent = 'Вы проиграли!';
+                }
+                updateBalanceDisplay();
+            }
+        }
+
+        // Initialize balance on page load
+        updateBalanceDisplay();
+    </script>
+</body>
+</html> 

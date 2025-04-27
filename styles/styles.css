@@ -1,0 +1,216 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.header-title {
+    font-family: 'Raleway', sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0;
+    flex: 1;
+    text-align: left;
+    padding-left: 20px;
+}
+
+.weather-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding-top: 80px;
+}
+
+.city-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+#city-input {
+    width: 300px;
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 20px;
+    font-size: 16px;
+    outline: none;
+    margin-right: 10px;
+}
+
+#search-button {
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    width: 60px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.current-weather, .hourly-forecast, .detailed-forecast {
+    background-size: cover;
+    background-position: center;
+    transition: background-image 0.5s ease-in-out;
+    padding: 20px;
+    margin: 10px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 1000px;
+}
+
+.temperature {
+    font-size: 24px;
+    font-weight: normal;
+}
+
+.current-weather {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 200px;
+}
+
+.left-section {
+    text-align: center;
+    margin-bottom: auto;
+}
+
+.right-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: auto;
+}
+
+.additional-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    max-width: 1000px;
+    padding: 10px;
+    background-color: transparent;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.hourly-forecast {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+#weather-icon {
+    width: auto;
+    height: auto;
+    max-width: 100px;
+    max-height: 100px;
+}
+
+.weather-container h2{
+    font-size: 76px;
+}
+.qw{
+    font-size: 76px;
+    margin-left: 10px;
+}
+.er{
+    font-size: 23px;
+}
+.as{
+    font-size: 29px;
+}
+.weather-container {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+.current-weather {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+    background-color: #000;
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.left-section {
+    /* Левая часть с названием города */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-section {
+    /* Правая часть с температурой и дополнительной информацией */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.current-weather h2 {
+    margin: 0;
+}
+
+.hourly-forecast,
+.detailed-forecast {
+    background-color: #000;
+    color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.hourly-forecast table,
+.detailed-forecast table {
+    width: 100%;
+    border-collapse: collapse;
+    border-radius: 10px; /* Закругление для самой таблицы */
+}
+
+.hourly-forecast table th,
+.detailed-forecast table th,
+.hourly-forecast table td,
+.detailed-forecast table td {
+    padding: 10px;
+    text-align: center;
+}
+
+.hourly-forecast table th {
+    background-color: #1a1a1a;
+}
+
+.detailed-forecast table th {
+    background-color: #1a1a1a;
+}
+
+.feels-like {
+    font-size: 18px;
+    margin-top: -10px;
+}

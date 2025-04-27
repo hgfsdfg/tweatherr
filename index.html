@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TitkoWeather</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .header-title {
+            font-family: 'Raleway', sans-serif;
+            font-size: 36px;
+            font-weight: 700;
+            margin: 0;
+            flex: 1;
+            text-align: left;
+            padding-left: 20px; /* Move title to the right */
+        }
+
+        .weather-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 80px; /* Adjust for header height */
+        }
+
+        .current-weather, .hourly-forecast, .detailed-forecast {
+            background-size: cover;
+            background-position: center;
+            transition: background-image 0.5s ease-in-out;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .city-search {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+        }
+
+        #city-input {
+            width: 300px;
+            padding: 10px;
+            border: 3px solid black;
+            border-radius: 20px;
+            font-size: 16px;
+            outline: none;
+            margin-right: 10px;
+        }
+
+        #search-button {
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            width: 60px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .temperature {
+            font-size: 24px;
+            font-weight: normal;
+        }
+
+        .current-weather {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 200px; /* Adjust height as needed */
+        }
+
+        .left-section {
+            text-align: center;
+            margin-bottom: auto;
+        }
+
+        .right-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .additional-info {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            max-width: 1000px;
+            padding: 10px;
+            background-color: transparent; /* Fully transparent */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .hourly-forecast {
+            font-size: 18px; /* Increase font size */
+            font-weight: bold; /* Make text bold */
+        }
+
+        #weather-icon {
+            width: auto;
+            height: auto;
+            max-width: 100px; /* Set a maximum width */
+            max-height: 100px; /* Set a maximum height */
+        }
+
+        body, h1, h2, h3, h4, h5, h6, p, div, span, td, th, button, input {
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .header, footer {
+            text-shadow: none;
+        }
+
+        .header-title, #city-input, #search-button, #open-casino {
+            text-shadow: none;
+        }
+
+        footer, footer button, .additional-info div {
+            text-shadow: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="header-title">T-Weather</h1>
+        <div class="city-search">
+            <input type="text" id="city-input" placeholder="Введите название города" />
+            <button id="search-button">НАЙТИ</button>
+        </div>
+    </div>
+    <div class="weather-container">
+        <!-- Блок с дополнительной информацией -->
+        <div class="additional-info">
+            <div class="wind">
+                <img src="images/wind-icon.png" alt="Ветер" style="width: 20px; height: 20px;">
+                <div id="wind-speed">Loading...</div>
+            </div>
+            <div class="pressure">
+                <img src="images/pressure-icon.png" alt="Давление" style="width: 20px; height: 20px;">
+                <div id="pressure">Loading...</div>
+            </div>
+            <div class="humidity">
+                <img src="images/humidity-icon.png" alt="Влажность" style="width: 20px; height: 20px;">
+                <div id="humidity">Loading...</div>
+            </div>
+        </div>
+
+        <!-- Блок с текущей погодой -->
+        <div class="current-weather">
+            <div class="left-section">
+                <h2 id="city-name">Новосибирск</h2>
+            </div>
+            <div class="right-section">
+                <div class="temperature" style="display: flex; align-items: center;">
+                    <div id="temperature" style="margin-right: 10px;">Loading...</div>
+                    <img id="weather-icon" alt="Weather Icon" style="width: auto; height: auto; max-width: 100px; max-height: 100px; margin-right: 10px;">
+                    <div>
+                        <div id="weather-description" style="margin-right: 10px;">Loading...</div>
+                        <div id="feels-like" class="feels-like">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок с прогнозом на день -->
+        <div class="hourly-forecast">
+            <!-- This container is intentionally left empty -->
+        </div>
+
+        <!-- Блок с детальным прогнозом -->
+        <div class="detailed-forecast">
+            <table>
+                <tr>
+                    <th>Дата</th>
+                    <th>Температура</th>
+                    <th>Ветер</th>
+                    <th>Давление</th>
+                    <th>Влажность</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- Casino Button and Modal -->
+    <button onclick="window.location.href='casino.html'" style="background-color: white; border: none; color: white;">Открыть казино</button>
+
+    <div id="casino-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Казино</h2>
+            <div id="balance">Баланс: 5000</div>
+            <button id="recharge-button">Пополнить баланс</button>
+            <div class="casino-games">
+                <div class="slot-machine">
+                    <div class="slot-window" id="slot1">0</div>
+                    <div class="slot-window" id="slot2">0</div>
+                    <div class="slot-window" id="slot3">0</div>
+                    <button id="spin-button">Крутить</button>
+                    <div id="result-message"></div>
+                </div>
+                <div class="blackjack">
+                    <h3>Блэкджек</h3>
+                    <div id="player-score">Ваши очки: 0</div>
+                    <div id="bot-score">Очки бота: 0</div>
+                    <button id="hit-button">Взять</button>
+                    <button id="stand-button">Оставить</button>
+                    <button id="new-game-button">Начать новую игру</button>
+                    <div id="blackjack-result"></div>
+                </div>
+                <div class="numbers-game">
+                    <h3>Числа</h3>
+                    <div id="shown-number">Показанное число: 50</div>
+                    <button id="higher-button">Больше</button>
+                    <button id="lower-button">Меньше</button>
+                    <div id="numbers-result"></div>
+                </div>
+                <div class="racket-game">
+                    <h3>Ракетка</h3>
+                    <div id="timer-display">00:00</div>
+                    <button id="start-button">Старт</button>
+                    <button id="stop-button">Стоп</button>
+                    <div id="racket-result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="recharge-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-recharge">&times;</span>
+            <h3>Пополнение баланса</h3>
+            <label for="card-number">Номер карты:</label>
+            <input type="text" id="card-number" maxlength="16" placeholder="Введите 16 цифр">
+            <label for="expiry-date">ММ/ГГ:</label>
+            <input type="text" id="expiry-date" maxlength="5" placeholder="ММ/ГГ">
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" maxlength="3" placeholder="Введите 3 цифры">
+            <label for="recharge-amount">Сумма пополнения:</label>
+            <input type="number" id="recharge-amount" min="1" max="5000" placeholder="Введите сумму">
+            <button id="confirm-recharge">Пополнить</button>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: 10px; background-color: #f8f9fa; position: fixed; bottom: 0; width: 100%; box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);">
+        &copy; 2025 Все права защищены.
+        <button onclick="window.location.href='casino.html'" style="background-color: #f8f9fa; border: none; color: #f8f9fa;">Открыть казино</button>
+    </footer>
+
+    <script>
+        const apiKey = '105df93d4c58b96aa18fbdab05feb9af';
+
+        function fetchWeatherData(city) {
+            const currentWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=ru`;
+            const forecastUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&units=metric&lang=ru`;
+
+            // Fetch current weather
+            fetch(currentWeatherUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    document.getElementById('city-name').textContent = data.name;
+                    document.getElementById('temperature').textContent = `${Math.round(data.main.temp)}°C`;
+                    document.getElementById('weather-description').textContent = data.weather[0].description;
+                    document.getElementById('feels-like').textContent = `ощущается как ${Math.round(data.main.feels_like)}°C`;
+                    document.getElementById('wind-speed').textContent = `${data.wind.speed} м/с`;
+                    const pressureMmHg = Math.round(data.main.pressure * 0.75006);
+                    document.getElementById('pressure').textContent = `${pressureMmHg} мм рт. ст.`;
+                    document.getElementById('humidity').textContent = `${data.main.humidity}%`;
+                    const iconCode = data.weather[0].icon;
+                    document.getElementById('weather-icon').src = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+                    // Set background image based on weather condition
+                    const weatherMain = data.weather[0].main.toLowerCase();
+                    const weatherContainers = document.querySelectorAll('.current-weather, .hourly-forecast, .detailed-forecast');
+                    let backgroundImage = "none";
+                    if (weatherMain.includes('clear')) {
+                        backgroundImage = "url('images/sun.jpg')";
+                    } else if (weatherMain.includes('rain')) {
+                        backgroundImage = "url('images/rain.jpg')";
+                    } else if (weatherMain.includes('cloud')) {
+                        backgroundImage = "url('images/cloud.jpg')";
+                    } else if (weatherMain.includes('snow')) {
+                        backgroundImage = "url('images/snow.jpg')";
+                    }
+                    weatherContainers.forEach(container => {
+                        container.style.backgroundImage = backgroundImage;
+                    });
+
+                    // Select a random warning based on weather condition
+                    const warnings = {
+                        clear: [
+                            'Сегодня от солнца можно спрятаться только под зонтиком — даже тени недостаточно!',
+                            'Солнечный день идеально подходит для прогулок, но не забудьте нанести солнцезащитный крем.',
+                            'Жаркий день требует воды: берите с собой бутылочку, чтобы избежать обезвоживания.'
+                        ],
+                        rain: [
+                            'Берите зонт, чтобы не промокнуть до нитки! Сегодня будет сильный дождь.',
+                            'Говорят, дождь смывает плохое настроение, но лучше всё же взять резиновые сапоги.'
+                        ],
+                        clouds: [
+                            'Холодный ветер часто сопровождает пасмурную погоду. Не забудьте шарф или свитер.',
+                            'Сегодня небо затянуто тучами. Возьмите с собой лёгкую куртку.'
+                        ],
+                        snow: [
+                            'Снегопад может быть красивым, но не забудьте шапку и перчатки!',
+                            'Сегодня снежно, так что лучше надеть тёплую обувь и куртку.'
+                        ]
+                    };
+
+                    let selectedWarning = '';
+                    if (weatherMain.includes('clear')) {
+                        selectedWarning = warnings.clear[Math.floor(Math.random() * warnings.clear.length)];
+                    } else if (weatherMain.includes('rain')) {
+                        selectedWarning = warnings.rain[Math.floor(Math.random() * warnings.rain.length)];
+                    } else if (weatherMain.includes('cloud')) {
+                        selectedWarning = warnings.clouds[Math.floor(Math.random() * warnings.clouds.length)];
+                    } else if (weatherMain.includes('snow')) {
+                        selectedWarning = warnings.snow[Math.floor(Math.random() * warnings.snow.length)];
+                    }
+
+                    document.querySelector('.hourly-forecast').textContent = selectedWarning;
+                })
+                .catch(error => {
+                    console.error('Error fetching current weather data:', error);
+                    document.getElementById('temperature').textContent = 'Ошибка загрузки данных';
+                });
+
+            // Fetch weekly forecast
+            fetch(forecastUrl)
+                .then(response => response.json())
+                .then(data => {
+                    const detailedForecast = document.querySelector('.detailed-forecast tbody');
+                    detailedForecast.innerHTML = '';
+                    const today = new Date();
+                    for (let i = 0; i < 7; i++) {
+                        const date = new Date(today);
+                        date.setDate(today.getDate() + i);
+                        const day = date.getDate().toString().padStart(2, '0');
+                        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                        const formattedDate = `${day}.${month}`;
+                        const entry = data.list[i * 8]; // Get data for each day (assuming 3-hour intervals)
+                        const temp = `${Math.round(entry.main.temp)}°C`;
+                        const windSpeed = `${entry.wind.speed} м/с`;
+                        const pressureMmHg = Math.round(entry.main.pressure * 0.75006);
+                        const humidity = `${entry.main.humidity}%`;
+                        const row = `<tr>
+                            <td>${formattedDate}</td>
+                            <td>${temp}</td>
+                            <td><img src="images/wind-icon.png" alt="Ветер" style="width: 20px; height: 20px;"> ${windSpeed}</td>
+                            <td><img src="images/pressure-icon.png" alt="Давление" style="width: 20px; height: 20px;"> ${pressureMmHg} мм рт. ст.</td>
+                            <td><img src="images/humidity-icon.png" alt="Влажность" style="width: 20px; height: 20px;"> ${humidity}</td>
+                        </tr>`;
+                        detailedForecast.innerHTML += row;
+                    }
+                })
+                .catch(error => console.error('Error fetching weekly forecast data:', error));
+        }
+
+        document.getElementById('search-button').addEventListener('click', () => {
+            const city = document.getElementById('city-input').value;
+            if (city) {
+                fetchWeatherData(city);
+            }
+        });
+
+        document.getElementById('city-input').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                const city = document.getElementById('city-input').value;
+                if (city) {
+                    fetchWeatherData(city);
+                }
+            }
+        });
+
+        // Initial fetch for Novosibirsk
+        fetchWeatherData('Новосибирск');
+
+        // Initialize balance
+        let balance = 5000;
+        const balanceDisplay = document.getElementById('balance');
+
+        // Update balance display
+        function updateBalanceDisplay() {
+            balanceDisplay.textContent = `Баланс: ${balance}`;
+        }
+
+        // Casino Modal Logic
+        document.addEventListener('DOMContentLoaded', function() {
+            const openCasinoButton = document.getElementById('open-casino');
+            const casinoModal = document.getElementById('casino-modal');
+            const closeModal = document.querySelector('.close');
+            const resultMessage = document.getElementById('result-message');
+
+            openCasinoButton.onclick = function() {
+                casinoModal.style.display = 'block';
+            }
+
+            closeModal.onclick = function() {
+                casinoModal.style.display = 'none';
+                resultMessage.textContent = '';
+                resetBlackjack();
+            }
+
+            window.onclick = function(event) {
+                if (event.target == casinoModal) {
+                    casinoModal.style.display = 'none';
+                    resultMessage.textContent = '';
+                    resetBlackjack();
+                }
+            }
+        });
+
+        // Blackjack Game Logic
+        let playerScore = 0;
+        let botScore = 0;
+        const playerScoreDisplay = document.getElementById('player-score');
+        const botScoreDisplay = document.getElementById('bot-score');
+        const blackjackResult = document.getElementById('blackjack-result');
+        const hitButton = document.getElementById('hit-button');
+        const standButton = document.getElementById('stand-button');
+        const newGameButton = document.getElementById('new-game-button');
+
+        hitButton.onclick = function() {
+            playerScore += Math.floor(Math.random() * 11) + 1;
+            playerScoreDisplay.textContent = `Ваши очки: ${playerScore}`;
+            checkBlackjackWinner();
+        }
+
+        standButton.onclick = function() {
+            botPlay();
+            checkBlackjackWinner();
+        }
+
+        newGameButton.onclick = function() {
+            resetBlackjack();
+        }
+
+        function botPlay() {
+            while (botScore < 17) { // Bot will hit until it reaches 17
+                botScore += Math.floor(Math.random() * 11) + 1;
+                if (botScore >= 21) break; // Stop if bot reaches 21
+            }
+            botScoreDisplay.textContent = `Очки бота: ${botScore}`;
+            checkBlackjackWinner(); // Check winner after bot plays
+        }
+
+        function checkBlackjackWinner() {
+            if (playerScore === 21 && botScore !== 21) {
+                blackjackResult.textContent = 'Вы победили!';
+                balance += 200; // Double the bet
+            } else if (botScore === 21 && playerScore !== 21) {
+                blackjackResult.textContent = 'Вы проиграли!';
+            } else if (playerScore > 21) {
+                blackjackResult.textContent = 'Вы проиграли!';
+            } else if (botScore > 21) {
+                blackjackResult.textContent = 'Вы победили!';
+                balance += 200; // Double the bet
+            }
+            updateBalanceDisplay();
+        }
+
+        function resetBlackjack() {
+            playerScore = 0;
+            botScore = 0;
+            playerScoreDisplay.textContent = 'Ваши очки: 0';
+            botScoreDisplay.textContent = 'Очки бота: 0';
+            blackjackResult.textContent = '';
+        }
+
+        // Numbers Game Logic
+        const shownNumberDisplay = document.getElementById('shown-number');
+        const numbersResult = document.getElementById('numbers-result');
+        const higherButton = document.getElementById('higher-button');
+        const lowerButton = document.getElementById('lower-button');
+
+        let hiddenNumber = Math.floor(Math.random() * 100) + 1;
+        let shownNumber = 50; // Initial shown number
+        shownNumberDisplay.textContent = `Показанное число: ${shownNumber}`;
+
+        higherButton.onclick = function() {
+            if (balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                if (hiddenNumber > shownNumber) {
+                    numbersResult.textContent = 'Вы угадали!';
+                    balance += 200; // Double the bet
+                } else {
+                    numbersResult.textContent = 'Вы не угадали!';
+                }
+                updateBalanceDisplay();
+                resetNumbersGame();
+            } else {
+                numbersResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        lowerButton.onclick = function() {
+            if (balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                if (hiddenNumber < shownNumber) {
+                    numbersResult.textContent = 'Вы угадали!';
+                    balance += 200; // Double the bet
+                } else {
+                    numbersResult.textContent = 'Вы не угадали!';
+                }
+                updateBalanceDisplay();
+                resetNumbersGame();
+            } else {
+                numbersResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        function resetNumbersGame() {
+            hiddenNumber = Math.floor(Math.random() * 100) + 1;
+            shownNumber = Math.floor(Math.random() * 100) + 1;
+            shownNumberDisplay.textContent = `Показанное число: ${shownNumber}`;
+        }
+
+        // Initialize balance on page load
+        updateBalanceDisplay();
+
+        const rechargeButton = document.getElementById('recharge-button');
+        const rechargeModal = document.getElementById('recharge-modal');
+        const closeRecharge = document.querySelector('.close-recharge');
+        const confirmRecharge = document.getElementById('confirm-recharge');
+
+        rechargeButton.onclick = function() {
+            rechargeModal.style.display = 'block';
+        }
+
+        closeRecharge.onclick = function() {
+            rechargeModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == rechargeModal) {
+                rechargeModal.style.display = 'none';
+            }
+        }
+
+        confirmRecharge.onclick = function() {
+            const cardNumber = document.getElementById('card-number').value;
+            const expiryDate = document.getElementById('expiry-date').value;
+            const cvv = document.getElementById('cvv').value;
+            const amount = parseInt(document.getElementById('recharge-amount').value);
+
+            if (cardNumber.length === 16 && expiryDate.match(/\d{2}\/\d{2}/) && cvv.length === 3 && !isNaN(amount) && amount >= 1 && amount <= 5000) {
+                balance += amount;
+                updateBalanceDisplay();
+                alert(`Баланс пополнен на ${amount}`);
+                rechargeModal.style.display = 'none';
+            } else {
+                alert('Пожалуйста, введите корректные данные.');
+            }
+        }
+
+        // Racket Game Logic
+        const timerDisplay = document.getElementById('timer-display');
+        const startButton = document.getElementById('start-button');
+        const stopButton = document.getElementById('stop-button');
+        const racketResult = document.getElementById('racket-result');
+
+        let timerInterval;
+        let randomStopTime;
+        let timerRunning = false;
+        let startTime;
+
+        startButton.onclick = function() {
+            if (!timerRunning && balance >= 100) { // Minimum bet
+                balance -= 100;
+                updateBalanceDisplay();
+                timerRunning = true;
+                racketResult.textContent = '';
+                startTime = Date.now();
+                randomStopTime = Math.floor(Math.random() * 5000) + 2000; // Random stop between 2 and 7 seconds
+
+                timerInterval = setInterval(() => {
+                    let elapsedTime = Date.now() - startTime;
+                    let seconds = Math.floor(elapsedTime / 1000);
+                    let milliseconds = elapsedTime % 1000;
+                    timerDisplay.textContent = `${seconds.toString().padStart(2, '0')}:${milliseconds.toString().padStart(3, '0')}`;
+
+                    if (elapsedTime >= randomStopTime) {
+                        clearInterval(timerInterval);
+                        timerRunning = false;
+                        racketResult.textContent = 'Вы проиграли!';
+                        updateBalanceDisplay();
+                    }
+                }, 10);
+            } else if (balance < 100) {
+                racketResult.textContent = 'Недостаточно средств для ставки!';
+            }
+        }
+
+        stopButton.onclick = function() {
+            if (timerRunning) {
+                clearInterval(timerInterval);
+                timerRunning = false;
+                let elapsedTime = Date.now() - startTime;
+                let seconds = Math.floor(elapsedTime / 1000);
+                if (elapsedTime < randomStopTime) {
+                    racketResult.textContent = 'Вы победили!';
+                    balance += 200 + (seconds * 100); // Double the bet plus 100 per second
+                } else {
+                    racketResult.textContent = 'Вы проиграли!';
+                }
+                updateBalanceDisplay();
+            }
+        }
+    </script>
+</body>
+</html>
